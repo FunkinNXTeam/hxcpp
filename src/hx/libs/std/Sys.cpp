@@ -23,7 +23,7 @@
 #include <dirent.h>
 #if defined(HX_NX)
 #include <machine/termios.h>
-#else
+#elif !defined(HX_VITA)
 #include <termios.h>
 #endif
 #include <sys/time.h>
@@ -32,9 +32,9 @@
 #include <limits.h>
 #ifndef ANDROID
 #include <locale.h>
-#if !defined(BLACKBERRY) && !defined(EPPC) && !defined(GCW0) && !defined(__GLIBC__) && !defined(HX_NX)
+#if !defined(BLACKBERRY) && !defined(EPPC) && !defined(GCW0) && !defined(__GLIBC__) && !defined(HX_NX) && !defined(HX_VITA)
 #include <xlocale.h>
-#elif defined(HX_NX)
+#elif defined(HX_NX) 
 #include <locale.h>
 #endif
 #endif
@@ -86,7 +86,7 @@
 
 String _hx_std_get_env( String v )
 {
-   #ifdef HX_WINRT || defined(HX_NX)
+   #if defined(HX_WINRT) || defined(HX_NX) || defined(HX_VITA)
       return String();
    #else
       #if defined(NEKO_WINDOWS) && defined(HX_SMART_STRINGS)
@@ -117,7 +117,7 @@ void _hx_std_put_env( String e, String v )
    #endif
       putenv(set.utf8_str());
 #else
-   #if !defined(HX_NX)
+   #if !defined(HX_NX) && !defined(HX_VITA)
    if (v == null())
       unsetenv(e.utf8_str());
    else
@@ -288,6 +288,8 @@ String _hx_std_sys_string()
    return HX_CSTRING("EPPC");
 #elif defined(HX_NX)
    return HX_CSTRING("HorizonOS");
+#elif defined(HX_VITA)
+   return HX_CSTRING("Vita");
 #else
 #error Unknow system string
 #endif
@@ -314,7 +316,7 @@ bool _hx_std_sys_is64()
 **/
 int _hx_std_sys_command( String cmd )
 {
-   #if defined(HX_WINRT) || defined(EMSCRIPTEN) || defined(EPPC) || defined(IPHONE) || defined(APPLETV) || defined(HX_APPLEWATCH) || defined(HX_NX)
+   #if defined(HX_WINRT) || defined(EMSCRIPTEN) || defined(EPPC) || defined(IPHONE) || defined(APPLETV) || defined(HX_APPLEWATCH) || defined(HX_NX) || defined(HX_VITA)
    return -1;
    #else
    if( !cmd.raw_ptr() || !cmd.length )
@@ -661,6 +663,8 @@ double _hx_std_sys_cpu_time()
     return ((double)GetTickCount64()/1000.0);
 #elif defined(HX_NX)
    return ((double)armTicksToNs(armGetSystemTick()) / 1.0e6); // Use directy the libnx API
+#elif defined(HX_VITA)
+   return 0;
 #elif defined(NEKO_WINDOWS)
    FILETIME unused;
    FILETIME stime;
@@ -767,7 +771,7 @@ Array<String> _hx_std_sys_read_dir( String p )
 **/
 String _hx_std_file_full_path( String path )
 {
-#if defined(HX_WINRT) || defined(HX_NX)
+#if defined(HX_WINRT) || defined(HX_NX) || defined(HX_VITA)
    return path;
 #elif defined(NEKO_WINDOWS)
    wchar_t buf[MAX_PATH+1];
@@ -807,7 +811,7 @@ String _hx_std_sys_exe_path()
    if( _NSGetExecutablePath(path, &path_len) )
       return null();
    return String::create(path);
-#elif defined(EPPC) || defined(HX_NX)
+#elif defined(EPPC) || defined(HX_NX) || defined(HX_VITA)
    return HX_CSTRING("");
 #else
    {
@@ -885,7 +889,7 @@ Array<String> _hx_std_sys_env()
 **/
 int _hx_std_sys_getch( bool b )
 {
-#if defined(HX_WINRT) || defined(EMSCRIPTEN) || defined(EPPC) || defined(HX_NX)
+#if defined(HX_WINRT) || defined(EMSCRIPTEN) || defined(EPPC) || defined(HX_NX) || defined(HX_VITA)
    return 0;
 #elif defined(NEKO_WINDOWS)
    hx::EnterGCFreeZone();
@@ -920,7 +924,7 @@ int _hx_std_sys_get_pid()
 {
 #   ifdef NEKO_WINDOWS
    return (int)(GetCurrentProcessId());
-#elif defined(EPPC) || defined(HX_NX)
+#elif defined(EPPC) || defined(HX_NX) || defined(HX_VITA)
    return (1);
 #   else
    return (getpid());

@@ -366,7 +366,14 @@ double __hxcpp_timezone_offset(double inSeconds)
 
    return mktime(&localTime) - mktime(&gmTime);
    #else
+   #if defined(__GLIBC__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
+       defined(__OpenBSD__) || defined(__DragonFly__) || defined(__ANDROID__)
    return localTime.tm_gmtoff;
+   #else
+   struct tm gmTime;
+   __internal_gmtime(inSeconds, &gmTime );
+   return mktime(&localTime) - mktime(&gmTime);
+   #endif
    #endif
 }
 

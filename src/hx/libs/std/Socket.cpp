@@ -68,7 +68,7 @@ typedef int SocketLen;
 typedef socklen_t SocketLen;
 #endif
 
-#if (defined(NEKO_WINDOWS) || defined(HX_NX) || defined(NEKO_MAC)) && !defined(MSG_NOSIGNAL)
+#ifndef MSG_NOSIGNAL
 #   define MSG_NOSIGNAL 0
 #endif
 
@@ -400,7 +400,7 @@ int _hx_std_host_resolve( String host )
       struct hostent *h = 0;
       hx::strbuf hostBuf;
 
-#   if defined(NEKO_WINDOWS) || defined(NEKO_MAC) || defined(BLACKBERRY) || defined(EMSCRIPTEN) || defined(HX_NX)
+#   if defined(NEKO_WINDOWS) || defined(NEKO_MAC) || defined(BLACKBERRY) || defined(EMSCRIPTEN) || defined(HX_NX) || defined(HX_VITA)
       h = gethostbyname(host.utf8_str(&hostBuf));
 #   else
       struct hostent hbase;
@@ -485,7 +485,11 @@ Array<unsigned char> _hx_std_host_resolve_ipv6( String host, bool )
          }
          else
          {
+            #if defined(HX_VITA)
+            hx::Throw( host + HX_CSTRING(":getaddrinfo failed") );
+            #else
             hx::Throw( host + HX_CSTRING(":") + String(gai_strerror(err)) );
+            #endif
          }
       }
 
@@ -546,7 +550,7 @@ String _hx_std_host_reverse( int host )
       struct hostent *h = 0;
       unsigned int ip = host;
       hx::EnterGCFreeZone();
-      #if defined(NEKO_WINDOWS) || defined(NEKO_MAC) || defined(ANDROID) || defined(BLACKBERRY) || defined(EMSCRIPTEN) || defined(HX_NX)
+      #if defined(NEKO_WINDOWS) || defined(NEKO_MAC) || defined(ANDROID) || defined(BLACKBERRY) || defined(EMSCRIPTEN) || defined(HX_NX) || defined(HX_VITA)
       h = gethostbyaddr((char *)&ip,4,AF_INET);
       #else
       struct hostent htmp;
@@ -563,7 +567,7 @@ String _hx_std_host_reverse( int host )
 
 String _hx_std_host_reverse_ipv6( Array<unsigned char> host )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
       return String();
    #else
       if (!host.mPtr || host->length!=16)
@@ -592,7 +596,7 @@ String _hx_std_host_reverse_ipv6( Array<unsigned char> host )
 **/
 String _hx_std_host_local()
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
       return String();
    #else
       char buf[256];
@@ -638,7 +642,7 @@ void _hx_std_socket_connect( Dynamic o, int host, int port )
 **/
 void _hx_std_socket_connect_ipv6( Dynamic o, Array<unsigned char> host, int port )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
       return;
    #else
       struct sockaddr_in6 addr;
@@ -889,7 +893,7 @@ void _hx_std_socket_bind( Dynamic o, int host, int port )
 **/
 void _hx_std_socket_bind_ipv6( Dynamic o, Array<unsigned char> host, int port )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
       return;
    #else
       SOCKET sock = val_sock(o);

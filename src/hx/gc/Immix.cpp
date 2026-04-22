@@ -7087,7 +7087,7 @@ void __hxcpp_gc_safe_point()
 
 //#define HXCPP_FORCE_OBJ_MAP
 
-#if defined(HXCPP_M64) || defined(HXCPP_GC_MOVING) || defined(HXCPP_FORCE_OBJ_MAP)
+#if defined(HXCPP_M64) || defined(HXCPP_GC_MOVING) || defined(HXCPP_FORCE_OBJ_MAP) || (INTPTR_MAX > INT_MAX)
 #define HXCPP_USE_OBJECT_MAP
 #endif
 

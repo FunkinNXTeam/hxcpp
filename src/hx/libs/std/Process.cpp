@@ -11,10 +11,8 @@
 #   include <memory.h>
 #   include <errno.h>
 #   include <signal.h>
-#   if defined(ANDROID) || defined(BLACKBERRY) || defined(EMSCRIPTEN) || defined(HX_NX)
+#   if !defined(EMSCRIPTEN) && !defined(HX_NX) && !defined(HX_VITA)
 #      include <sys/wait.h>
-#   elif !defined(NEKO_MAC)
-#      include <wait.h>
 #   endif
 #endif
 
@@ -102,7 +100,7 @@ struct vprocess : public hx::Object
 
 vprocess *getProcess(Dynamic handle)
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
    return null();
    #else
     vprocess *p = dynamic_cast<vprocess *>(handle.mPtr);
@@ -194,7 +192,7 @@ static String quoteString(String v)
 **/
 Dynamic _hx_std_process_run( String cmd, Array<String> vargs, int inShowParam )
 {
-   #if defined(APPLETV) || defined(HX_APPLEWATCH) || defined(HX_NX)
+   #if defined(APPLETV) || defined(HX_APPLEWATCH) || defined(HX_NX) || defined(HX_VITA)
    return null();
 
    #else
@@ -351,7 +349,7 @@ Dynamic _hx_std_process_run( String cmd, Array<String> vargs, int inShowParam )
 **/
 int _hx_std_process_stdout_read( Dynamic handle, Array<unsigned char> buf, int pos, int len )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
    return 0;
    #else
    if( pos < 0 || len < 0 || pos + len > buf->length )
@@ -386,7 +384,7 @@ int _hx_std_process_stdout_read( Dynamic handle, Array<unsigned char> buf, int p
 **/
 int _hx_std_process_stderr_read( Dynamic handle, Array<unsigned char> buf, int pos, int len )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
    return 0;
    #else
    if( pos < 0 || len < 0 || pos + len > buf->length )
@@ -420,7 +418,7 @@ int _hx_std_process_stderr_read( Dynamic handle, Array<unsigned char> buf, int p
 **/
 int _hx_std_process_stdin_write( Dynamic handle, Array<unsigned char> buf, int pos, int len )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
    return 0;
    #else
    if( pos < 0 || len < 0 || pos + len > buf->length )
@@ -454,7 +452,7 @@ int _hx_std_process_stdin_write( Dynamic handle, Array<unsigned char> buf, int p
 **/
 void _hx_std_process_stdin_close( Dynamic handle )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
    return;
    #else
    vprocess *p = getProcess(handle);
@@ -479,7 +477,7 @@ void _hx_std_process_stdin_close( Dynamic handle )
 #if (HXCPP_API_LEVEL > 420)
 Dynamic _hx_std_process_exit( Dynamic handle, bool block )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
       return null();
    #else
    vprocess *p = getProcess(handle);
@@ -534,7 +532,7 @@ Dynamic _hx_std_process_exit( Dynamic handle, bool block )
 #else
 int _hx_std_process_exit( Dynamic handle )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
    return 0;
    #else
    vprocess *p = getProcess(handle);
@@ -577,7 +575,7 @@ int _hx_std_process_exit( Dynamic handle )
 **/
 int _hx_std_process_pid( Dynamic handle )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
    return 0;
    #else
    vprocess *p = getProcess(handle);
@@ -592,7 +590,7 @@ int _hx_std_process_pid( Dynamic handle )
 
 void _hx_std_process_kill( Dynamic handle )
 {
-   #if defined(HX_NX)
+   #if defined(HX_NX) || defined(HX_VITA)
    return;
    #else
    vprocess *p = getProcess(handle);

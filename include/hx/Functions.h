@@ -8,9 +8,7 @@ namespace hx
    {
       int __GetType() const { return vtFunction; }
       inline void DoMarkThis(hx::MarkContext *__inCtx) { }
-#ifdef HXCPP_VISIT_ALLOCS
-      inline void DoVisitThis(hx::VisitContext *__inCtx) { }
-#endif
+      inline void DoVisitThis(hx::VisitContext *__inCtx) { (void)__inCtx; }
    };
 
    struct HXCPP_EXTERN_CLASS_ATTRIBUTES LocalThisFunc : public LocalFunc
@@ -20,6 +18,8 @@ namespace hx
       inline void DoMarkThis(hx::MarkContext *__inCtx) { HX_MARK_MEMBER(__this); }
 #ifdef HXCPP_VISIT_ALLOCS
       inline void DoVisitThis(hx::VisitContext *__inCtx) { HX_VISIT_MEMBER(__this); }
+#else
+      inline void DoVisitThis(hx::VisitContext *__inCtx) { (void)__inCtx; }
 #endif
    };
 
