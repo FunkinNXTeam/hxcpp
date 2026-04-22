@@ -2078,7 +2078,8 @@ class BuildTool
             defines.set("toolchain","mingw");
             defines.set("mingw", "mingw");
             defines.set("xcompile","1");
-            defines.set("BINDIR", arm64 ? "WindowsArm64" : m64 ? "Windows64":"Windows");
+            if (!defines.exists("BINDIR"))
+               defines.set("BINDIR", arm64 ? "WindowsArm64" : m64 ? "Windows64":"Windows");
          }
          else
          {
@@ -2099,7 +2100,8 @@ class BuildTool
                defines.set("HXCPP_ARM64","1");
                m64 = true;
             }
-            defines.set("BINDIR", m64 ? "Linux64":"Linux");
+            if (!defines.exists("BINDIR"))
+               defines.set("BINDIR", m64 ? "Linux64":"Linux");
          }
       }
       else if ( (new EReg("mac","i")).match(os) )
@@ -2112,7 +2114,8 @@ class BuildTool
             defines.set("linux","linux");
             defines.set("toolchain","linux");
             defines.set("xcompile","1");
-            defines.set("BINDIR", m64 ? "Linux64":"Linux");
+            if (!defines.exists("BINDIR"))
+               defines.set("BINDIR", m64 ? "Linux64":"Linux");
          }
          else
          {
