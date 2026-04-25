@@ -94,11 +94,13 @@
       <!-- PS Vita specific flags -->
       <section if="vita || HX_VITA">
          <flag value='-marm'/>
+         <flag value='-mno-thumb-interwork'/>
          <flag value='-march=armv7-a'/>
          <flag value='-mfpu=neon'/>
          <flag value='-mfloat-abi=hard'/>
          <flag value='-mtune=cortex-a9'/>
-         <flag value='-fPIE'/>
+         <flag value='-fno-pie'/>
+         <flag value='-fno-pic'/>
          <flag value='-Wall'/>
          <flag value='-D__VITA__'/>
          <flag value='-D__PSVITA__'/>
