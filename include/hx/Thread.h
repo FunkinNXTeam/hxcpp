@@ -129,6 +129,9 @@ inline bool HxCreateDetachedThread(void *(*func)(void *), void *param)
 	pthread_attr_t attr;
 	if (pthread_attr_init(&attr) != 0)
 		return false;
+#if defined(HX_VITA)
+	pthread_attr_setstacksize(&attr, 512 * 1024);
+#endif
 #ifdef PTHREAD_CREATE_DETACHED
 	if (pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED) != 0)
 		return false;

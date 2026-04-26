@@ -4559,7 +4559,13 @@ public:
             pthread_cond_init(&sThreadJobDone,0);
 
          pthread_t result = 0;
-         int created = pthread_create(&result,0,SThreadLoop,info);
+         pthread_attr_t attr;
+         pthread_attr_init(&attr);
+         #if defined(HX_VITA)
+         pthread_attr_setstacksize(&attr, 512 * 1024);
+         #endif
+         int created = pthread_create(&result, &attr, SThreadLoop, info);
+         pthread_attr_destroy(&attr);
          bool ok = created==0;
       #elif defined(EMSCRIPTEN)
          // Only one thread
