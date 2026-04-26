@@ -6,6 +6,8 @@
 #include <vector>
 #include <stdlib.h>
 
+extern "C" void hx_error();
+
 #ifdef ANDROID
 #include <android/log.h>
 #include <unistd.h>
@@ -704,29 +706,36 @@ void *__hxcpp_get_proc_address(String inLib, String full_name,bool inNdllProc,bo
    if (!proc_query)
        proc_query = (FundFunc)hxFindSymbol(module, (inLib + HX_CSTRING("_") + full_name).__CStr());
 
-   if (!proc_query && !inQuietFail)
+   if (!proc_query)
    {
-      #ifdef ANDROID
-       __android_log_print(ANDROID_LOG_ERROR, "loader", "Could not find primitive %s in %p",
-        full_name.__CStr(), module);
-      #else
-      fprintf(stderr,"Could not find primitive %s.\n", full_name.__CStr());
-      #endif
-      return 0;
+      if (!inQuietFail)
+      {
+         #ifdef ANDROID
+          __android_log_print(ANDROID_LOG_ERROR, "loader", "Could not find primitive %s in %p",
+           full_name.__CStr(), module);
+         #else
+         fprintf(stderr,"Could not find primitive %s.\n", full_name.__CStr());
+         #endif
+      }
+      return (void *)hx_error;
    }
 
    if (!inNdllProc)
       return (void *)proc_query;
 
    void *proc = proc_query();
-   if (!proc && !inQuietFail)
+   if (!proc)
    {
-      #ifdef ANDROID
-      __android_log_print(ANDROID_LOG_ERROR, "loader", "Could not identify primitive %s in %s",
-        full_name.__CStr(), inLib.__CStr() );
-      #else
-      fprintf(stderr,"Could not identify primitive %s in %s\n", full_name.__CStr(),inLib.__CStr());
-      #endif
+      if (!inQuietFail)
+      {
+         #ifdef ANDROID
+         __android_log_print(ANDROID_LOG_ERROR, "loader", "Could not identify primitive %s in %s",
+           full_name.__CStr(), inLib.__CStr() );
+         #else
+         fprintf(stderr,"Could not identify primitive %s in %s\n", full_name.__CStr(),inLib.__CStr());
+         #endif
+      }
+      return (void *)hx_error;
    }
 
    return proc;

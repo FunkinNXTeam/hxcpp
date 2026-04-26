@@ -656,6 +656,12 @@ public:
 
 
           ctx =  HX_CTX_GET;
+          if (!ctx)
+          {
+             int t0 = 0;
+             ::hx::SetTopOfStack(&t0,false);
+             ctx = HX_CTX_GET;
+          }
           ctx->pushFrame(this);
        }
 

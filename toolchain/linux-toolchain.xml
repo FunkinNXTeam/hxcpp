@@ -45,6 +45,7 @@
          <set name='HXCPP_AR'     value='${HXCPP_XLINUX32_AR}' if="HXCPP_XLINUX32_AR" />
          <set name='HXCPP_RANLIB' value='${VITASDK}/bin/arm-vita-eabi-ranlib' unless="HXCPP_XLINUX32_RANLIB" />
          <set name='HXCPP_RANLIB' value='${HXCPP_XLINUX32_RANLIB}' if="HXCPP_XLINUX32_RANLIB" />
+         <set name="OBJEXT" value="-vita-v7"/>
       </section>
       
    </section>

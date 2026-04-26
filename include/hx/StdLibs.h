@@ -686,9 +686,11 @@ inline float __hxcpp_memory_get_f32(Array<unsigned char> inBuffer ,int addr) {
 
 inline void __hxcpp_memory_set_byte(Array<unsigned char> inBuffer ,int addr,int v) { inBuffer->GetBase()[addr] = v; }
 inline void __hxcpp_memory_set_double(Array<unsigned char> inBuffer ,int addr,double v) {
+   if (!inBuffer.mPtr) { hx::NullReference("Array", false); return; }
    return __hxcpp_align_set_float64((unsigned char *)inBuffer->GetBase(), addr,v);
 }
 inline void __hxcpp_memory_set_float(Array<unsigned char> inBuffer ,int addr,float v) {
+   if (!inBuffer.mPtr) { hx::NullReference("Array", false); return; }
    return __hxcpp_align_set_float32((unsigned char *)inBuffer->GetBase(), addr,v);
 }
 inline void __hxcpp_memory_set_i16(Array<unsigned char> inBuffer ,int addr,int v) { *(short *)(inBuffer->GetBase()+addr) = v; }
@@ -696,6 +698,7 @@ inline void __hxcpp_memory_set_i32(Array<unsigned char> inBuffer ,int addr,int v
 inline void __hxcpp_memory_set_ui16(Array<unsigned char> inBuffer ,int addr,int v) { *(unsigned short *)(inBuffer->GetBase()+addr) = v; }
 inline void __hxcpp_memory_set_ui32(Array<unsigned char> inBuffer ,int addr,int v) { *(unsigned int *)(inBuffer->GetBase()+addr) = v; }
 inline void __hxcpp_memory_set_f32(Array<unsigned char> inBuffer ,int addr,float v) {
+   if (!inBuffer.mPtr) { hx::NullReference("Array", false); return; }
    return __hxcpp_align_set_float32((unsigned char *)inBuffer->GetBase(), addr, v);
 }
 
