@@ -110,6 +110,7 @@
          <flag value='-fexceptions'/>
          <flag value='-fpermissive'/>
          <flag value='-static'/>
+         <flag value='-fno-ipa-sra'/>
          <flag value="-I${VITASDK}/arm-vita-eabi/include"/>
       </section>
       <flag value="-fpic" unless="nx || vita || HX_VITA" />
@@ -155,10 +156,17 @@
       <outflag value="-o "/>
    </linker>
 
-  <linker id="static_library" exe="ar" if="linux">
+  <linker id="static_library" exe="ar" if="linux" unless="vita || HX_VITA">
       <exe name="${HXCPP_AR}" if="HXCPP_AR" />
       <flag value="rcs" />
       <outflag value="-o " />
+      <ext value=".a" />
+   </linker>
+
+   <linker id="static_library" exe="ar" if="vita || HX_VITA">
+      <exe name="${HXCPP_AR}" if="HXCPP_AR" />
+      <flag value="rcs" />
+      <outflag value="" />
       <ext value=".a" />
    </linker>
 
